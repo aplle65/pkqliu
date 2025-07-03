@@ -4,7 +4,7 @@ from datetime import date
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.filters import CommandStart, Command
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.schedulers.background import BackgroundScheduler
 import os
 from keepalive import keep_alive
 keep_alive()
@@ -19,10 +19,10 @@ user_modes = {}
 
 REGIONS = ["usa", "uk", "aus", "canada"]
 REGION_LIMITS = {
-    "usa": (0, 3),
-    "uk": (0, 2),
-    "aus": (0, 2),
-    "canada": (0, 3)
+    "usa": (0, 4),
+    "uk": (0, 3),
+    "aus": (1, 2),
+    "canada": (1, 3)
 }
 
 # In-memory phone data: region -> list of dicts
@@ -251,7 +251,7 @@ async def handle_delete(message: types.Message):
         await message.answer("❌ Usage: /delete <region> <phone>")
 
 def setup_scheduler():
-    scheduler = AsyncIOScheduler()
+    scheduler = BackgroundScheduler()
     scheduler.add_job(random_update_statuses, "interval", hours=24)
     scheduler.start()
 
